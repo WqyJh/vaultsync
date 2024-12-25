@@ -33,6 +33,17 @@ func (f *Fetcher) Fetch(ctx context.Context) error {
 		return fmt.Errorf("failed to create vault client: %w", err)
 	}
 
+	if f.VaultToken == "" {
+		response, err := client.Auth.AppRoleLogin(ctx, schema.AppRoleLoginRequest{
+			RoleId:   f.VaultRoleId,
+			SecretId: f.VaultSecretId,
+		})
+		if err != nil {
+			return fmt.Errorf("failed to login with app role: %w", err)
+		}
+		f.VaultToken = response.Auth.ClientToken
+	}
+
 	err = client.SetToken(f.VaultToken)
 	if err != nil {
 		return fmt.Errorf("failed to set vault token: %w", err)

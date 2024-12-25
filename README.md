@@ -19,8 +19,19 @@ go install github.com/WqyJh/vaultsync/cmd/vaultfetch@latest
 ## Usage
 
 ```bash
-vaultsync -vault-addr http://127.0.0.1:8500 \
+vaultsync -vault-addr http://127.0.0.1:8200 \
 -vault-token your_token \
+-mount-path kv \
+-local-path path/to/local \
+-vault-path path/to/vault
+```
+
+Use app role to login vault
+
+```bash
+vaultsync -vault-addr http://127.0.0.1:8200 \
+-role-id role_id \
+-secret-id secret_id \
 -mount-path kv \
 -local-path path/to/local \
 -vault-path path/to/vault
@@ -31,8 +42,19 @@ vaultsync -vault-addr http://127.0.0.1:8500 \
 Fetch vault secrets to local path.
 
 ```bash
-vaultfetch -vault-addr http://127.0.0.1:8500 \
+vaultfetch -vault-addr http://127.0.0.1:8200 \
 -vault-token your_token \
+-mount-path kv \
+-vault-path path/to/vault \
+-local-path path/to/local
+```
+
+Use app role to login vault
+
+```bash
+vaultfetch -vault-addr http://127.0.0.1:8200 \
+-role-id role_id \
+-secret-id secret_id \
 -mount-path kv \
 -vault-path path/to/vault \
 -local-path path/to/local

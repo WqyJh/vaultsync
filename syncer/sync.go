@@ -20,12 +20,14 @@ import (
 )
 
 type SyncerConfig struct {
-	VaultAddr  string
-	VaultToken string
-	MountPath  string
-	VaultPath  string
-	LocalPath  string
-	CasTry     int
+	VaultAddr     string
+	VaultToken    string
+	MountPath     string
+	VaultPath     string
+	LocalPath     string
+	CasTry        int
+	VaultRoleId   string
+	VaultSecretId string
 }
 
 type Syncer struct {
@@ -47,6 +49,17 @@ func (s *Syncer) Sync(ctx context.Context) error {
 	)
 	if err != nil {
 		return fmt.Errorf("failed to create vault client: %w", err)
+	}
+
+	if s.VaultToken == "" {
+		response, err := client.Auth.AppRoleLogin(ctx, schema.AppRoleLoginRequest{
+			RoleId:   s.VaultRoleId,
+			SecretId: s.VaultSecretId,
+		})
+		if err != nil {
+			return fmt.Errorf("failed to login with app role: %w", err)
+		}
+		s.VaultToken = response.Auth.ClientToken
 	}
 
 	err = client.SetToken(s.VaultToken)
