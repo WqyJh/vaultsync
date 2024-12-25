@@ -241,9 +241,26 @@ type Secret struct {
 	Metadata *schema.KvV2WriteMetadataRequest
 }
 
-func ReadLocalSecret(file string) (*Secret, error) {
+func ReadData(file string) (map[string]interface{}, error) {
 	var data = make(map[string]interface{})
 	err := ReadJson(file, &data)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
+func ReadMetadata(file string) (*schema.KvV2WriteMetadataRequest, error) {
+	var metadata schema.KvV2WriteMetadataRequest
+	err := ReadJson(file, &metadata)
+	if err != nil {
+		return nil, err
+	}
+	return &metadata, nil
+}
+
+func ReadLocalSecret(file string) (*Secret, error) {
+	data, err := ReadData(file)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read local secret: %s, %w", file, err)
 	}
@@ -257,14 +274,13 @@ func ReadLocalSecret(file string) (*Secret, error) {
 			Data: data,
 		}, nil
 	}
-	var metadata schema.KvV2WriteMetadataRequest
-	err = ReadJson(metadataPath, &metadata)
+	metadata, err := ReadMetadata(metadataPath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read metadata file: %s, %w", metadataPath, err)
 	}
 	return &Secret{
 		Data:     data,
-		Metadata: &metadata,
+		Metadata: metadata,
 	}, nil
 }
 
