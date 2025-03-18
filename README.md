@@ -59,3 +59,11 @@ vaultfetch -vault-addr http://127.0.0.1:8200 \
 -vault-path path/to/vault \
 -local-path path/to/local
 ```
+
+## Namespace
+
+If you want to specify vault namespace, pass `VAULT_NAMESPACE` environment variable.
+
+```bash
+export VAULT_NAMESPACE=your-namespace
+```

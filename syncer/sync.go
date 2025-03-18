@@ -46,6 +46,7 @@ func (s *Syncer) Sync(ctx context.Context) error {
 	client, err := vault.New(
 		vault.WithAddress(s.VaultAddr),
 		vault.WithRequestTimeout(30*time.Second),
+		vault.WithEnvironment(),
 	)
 	if err != nil {
 		return fmt.Errorf("failed to create vault client: %w", err)
